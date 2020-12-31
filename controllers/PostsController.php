@@ -10,6 +10,8 @@ use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 
+use app\classes\Search;
+
 /**
  * PostsController implements the CRUD actions for Posts model.
  */
@@ -78,6 +80,11 @@ class PostsController extends Controller
         $model = new Posts();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+            // run a query for updating the index on elastic on create new post
+            $search = new Search;
+            $search->indexer($model->attributes, true);
+
             return $this->redirect(['view', 'id' => $model->post_id]);
         }
 
@@ -98,6 +105,11 @@ class PostsController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
+
+            // run a query for updating the index on elastic on update post
+            $search = new Search;
+            $search->indexer($model->attributes, false);
+
             return $this->redirect(['view', 'id' => $model->post_id]);
         }
 

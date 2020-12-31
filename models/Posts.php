@@ -60,11 +60,4 @@ class Posts extends \yii\db\ActiveRecord
     {
         return $this->hasOne(Users::className(), ['user_id' => 'author_id']);
     }
-
-
-    // public function insert($runValidation = true, $attributes = null)
-    // {
-    //     // print_r('hello saved');
-    //     // die();
-    // }
 }
