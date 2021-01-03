@@ -36,11 +36,12 @@ class Search {
     }
 
     /**
-     * this method takes 2 parameters, search_phrase and object_entity
+     *  search_phrase is the phrase that you are searching for
+     *  index is what is declared at the top
      * Sends a http request to elastic server 
      * returns objects that contain the search_phrase
      * returned objects id are object_entity's record in our db
-     * 
+     * TODO : use a connector for elastic instead of http request 
      */
     public function search($search_phrase)
     {

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Dec 31, 2020 at 01:45 PM
+-- Generation Time: Jan 03, 2021 at 01:23 PM
 -- Server version: 10.5.8-MariaDB
 -- PHP Version: 7.4.13
 
@@ -24,87 +24,91 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `posts`
+-- Table structure for table `article`
 --
 
-CREATE TABLE `posts` (
-  `post_id` int(11) NOT NULL,
-  `title` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `author_id` int(11) NOT NULL
+CREATE TABLE `article` (
+  `id` int(11) NOT NULL,
+  `title` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `slug` varchar(1024) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `body` longtext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `created_at` int(11) DEFAULT NULL,
+  `updated_at` int(11) DEFAULT NULL,
+  `created_by` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `posts`
+-- Dumping data for table `article`
 --
 
-INSERT INTO `posts` (`post_id`, `title`, `description`, `author_id`) VALUES
-(1, 'how to setup elastic on ubuntu', 'update etc/elastic/elasticsearch.yaml :\r\nuncomment node.name\r\nuncomment and change : network.host : 0.0.0.0\r\nuncomment discovery.seed_hosts an change to [\"127.0.0.1\"]\r\nuncomment  cluster.initil_master-node and change to only [\"node-1\"]\r\ncurl XGET 127.0.0.1:9200     // check if installed', 1),
-(2, 'how to setup RabbitMQ on an ubuntu', 'approach 1:\r\ninstalling link:\r\nhttps://computingforgeeks.com/how-to-install-latest-rabbitmq-server-on-ubuntu-linux/\r\nerlang is a requirement :\r\nhttps://computingforgeeks.com/how-to-install-latest-erlang-on-ubuntu-linux/\r\nthe management panel:\r\nhttp://localhost:15672/\r\napproach 2:\r\nif docker :\r\ndocker run -it --rm --name rabbitmq -p 5672:5672 -p 15672:15672 rabbitmq:3-management\r\n##it\'s recommended to install Mysql Workbench Community', 1),
-(3, 'Working with Forms', 'This section describes how to create a new page with a form for getting data from users. The page will display a form with a name input field and an email input field. After getting those two pieces of information from the user, the page will echo the entered values back for confirmation.\r\n\r\nTo achieve this goal, besides creating an action and two views, you will also create a model.\r\n\r\nThrough this tutorial, you will learn how to:\r\n\r\ncreate a model to represent the data entered by a user through a form,\r\ndeclare rules to validate the data entered,\r\nbuild an HTML form in a view.\r\n', 2);
+INSERT INTO `article` (`id`, `title`, `slug`, `body`, `created_at`, `updated_at`, `created_by`) VALUES
+(1, 'first title', 'first-title', 'First Body search test', 1609672852, 1609672852, 1),
+(3, 'How to display activedataprovider data in gridview yii2', 'how-to-display-activedataprovider-data-in-gridview-yii2', 'You should\'nt return here result of function getModels(). I assume u pass this to GridView, but u have to pass ArrayDataProvider.\r\n\r\nChange this:\r\n\r\n$rows = $provider->getModels();\r\nreturn $rows;\r\nTo this:\r\n\r\nreturn $provider;You should\'nt return here result of function getModels(). I assume u pass this to GridView, but u have to pass ArrayDataProvider.\r\n\r\nChange this:\r\n\r\n$rows = $provider->getModels();\r\nreturn $rows;\r\nTo this:\r\n\r\nreturn $provider;', 1609678091, 1609678091, 1);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `user`
 --
 
-CREATE TABLE `users` (
-  `user_id` int(11) NOT NULL,
-  `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL,
+  `username` varchar(55) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `auth_key` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `access_token` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `user`
 --
 
-INSERT INTO `users` (`user_id`, `username`, `password`) VALUES
-(1, 'amir', 'amir'),
-(2, 'mani', 'mani');
+INSERT INTO `user` (`id`, `username`, `password`, `auth_key`, `access_token`) VALUES
+(1, 'admin', '$2y$13$C1lN6wR8IxR/4fkb0SgAC.1nasXfPoYjNle2eOnOYxcK2blgfg8na', 'LmgFO5042S5B76qPAG8fle9gSOqBMgbH', 'zI5iYlBxHoQ-kK8STwZoPGTr5fJ0PYsW'),
+(2, 'mani', '$2y$13$x//ppvHbCYrVOWIjwUvbMOLijaCFB6mVjMYJexlEisad8fPxndgFG', 'H9eQK4fLYNcqN3TnQTJy8GfakiHrS6hZ', 'mp4Qr_qgBw38ZHSvXaOY4Cq99MwG8eKw');
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `posts`
+-- Indexes for table `article`
 --
-ALTER TABLE `posts`
-  ADD PRIMARY KEY (`post_id`),
-  ADD KEY `author_id` (`author_id`);
+ALTER TABLE `article`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `article_user_created_by_fk` (`created_by`);
 
 --
--- Indexes for table `users`
+-- Indexes for table `user`
 --
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`user_id`);
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `posts`
+-- AUTO_INCREMENT for table `article`
 --
-ALTER TABLE `posts`
-  MODIFY `post_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `article`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT for table `user`
 --
-ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+ALTER TABLE `user`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `posts`
+-- Constraints for table `article`
 --
-ALTER TABLE `posts`
-  ADD CONSTRAINT `posts_ibfk_1` FOREIGN KEY (`author_id`) REFERENCES `users` (`user_id`);
+ALTER TABLE `article`
+  ADD CONSTRAINT `article_user_created_by_fk` FOREIGN KEY (`created_by`) REFERENCES `user` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
