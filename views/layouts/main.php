@@ -38,9 +38,8 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'Posts', 'url' => ['/posts/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
+            ['label' => 'Home', 'url' => [Yii::$app->homeUrl]],
+            // ['label' => 'Posts', 'url' => ['/posts/index']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
@@ -53,7 +52,10 @@ AppAsset::register($this);
                 )
                 . Html::endForm()
                 . '</li>'
-            )
+                ),
+                Yii::$app->user->isGuest ? (
+                    ['label' => 'Signup', 'url' => ['/site/signup']]
+                ): ''
         ],
     ]);
     NavBar::end();

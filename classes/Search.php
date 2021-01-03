@@ -2,54 +2,64 @@
 
 namespace app\classes;
 
-class Search {
-    protected $base_url = "127.0.0.1:9200/thesis/_doc/";
+use app\classes\Rabbit;
+use app\models\User;
+use Yii;
 
-    public function indexer($attributes, $new_record)
-    {
-        
-        $id = $attributes['post_id'];
-        $title = $attributes['title'];
-        
-        return $new_record ? $this->insert($id, $title) : $this->update($id, $title);
+class Search {
+    protected $base_url = "127.0.0.1:9200/thesis/_search";
+    protected $index = 'article';
+
+    public function indexer($attributes, $new_record, $object_entity)
+    {        
+        return $new_record ? 
+            $this->adaptor($attributes, 'insert',  $object_entity) : 
+            $this->adaptor($attributes, 'update',  $object_entity);
     }
     
-    
-    public function insert($id, $title){
-        $url = $this->base_url . $id;
+    public function adaptor($attributes, $type, $object_entity)
+    {
         $input_data = array (
-            'title' => $title
+            'type' => $type, //type of entry [insert, update, delete]
+            'model' => $object_entity, //model of entity [user, article,...]
+            'document' => $attributes, //entity object
+            'time' => date('Y-D-M H:i') // create_at date
         );
         
-        return $this->sendReq($url, $input_data);
+        return $this->sendToRabbit($input_data);
     }
-    
-    public function update($id, $title){
-        $url = $this->base_url . $id . "/_update";
-        $input_data = array (
-            "doc" =>  array (
-                'title' => $title
-                )
-            );
-            
-            return $this->sendReq($url, $input_data);
-        }
         
-        protected function sendReq($url, $input_data)
-        {
-            $handler = curl_init($url);
-            curl_setopt($handler, CURLOPT_HTTPHEADER, array(
-                'Content-Type: application/json',
-                'Connection: Keep-Alive'
-                ));
-            curl_setopt($handler, CURLOPT_CUSTOMREQUEST, "POST");
-            curl_setopt($handler, CURLOPT_POSTFIELDS, json_encode($input_data));
-            curl_setopt($handler, CURLOPT_RETURNTRANSFER, true);
-            return curl_exec($handler);
-        }
-
-    public function search($param)
+    protected function sendToRabbit($input_data)
     {
-        //request search in index, get data and return it
+        $rabbit = new Rabbit(); //init Rabbit class
+        return $rabbit->send($input_data);
+    }
+
+    /**
+     * this method takes 2 parameters, search_phrase and object_entity
+     * Sends a http request to elastic server 
+     * returns objects that contain the search_phrase
+     * returned objects id are object_entity's record in our db
+     * 
+     */
+    public function search($search_phrase)
+    {
+        $input_data = array(
+            'query' => array(
+                "match_phrase" => array(
+                    $this->index => $search_phrase
+                ) 
+            )
+        );
+
+        $handler = curl_init($this->base_url);
+        curl_setopt($handler, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Connection: Keep-Alive'
+            ));
+        curl_setopt($handler, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($handler, CURLOPT_POSTFIELDS, json_encode($input_data));
+        curl_setopt($handler, CURLOPT_RETURNTRANSFER, true);
+        return curl_exec($handler);
     }
 }
