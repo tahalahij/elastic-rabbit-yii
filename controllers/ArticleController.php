@@ -33,7 +33,7 @@ class ArticleController extends Controller
                     [
                         'actions' => ['update', 'create', 'delete'],
                         'allow' => true,
-                        'roles' => ['@']
+                        'roles' => []
                     ]
                 ]
             ],
@@ -86,7 +86,10 @@ class ArticleController extends Controller
     {
         $model = new Article();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
+        if ($model->load(Yii::$app->request->post()) ) {
+            $array = Yii::$app->request->post()['Article'] ;
+            // die(var_export( $array ));
             /**
              * init a new search
              * use indexer method to start indexing this model instance
@@ -96,7 +99,8 @@ class ArticleController extends Controller
             $search = new Search;
             $search->indexer($model->attributes, true, 'article');
             
-            return $this->redirect(['view', 'slug' => $model->slug]);
+            // return $this->redirect(['view', 'slug' => $model->slug]);
+            return $this->actionIndex();
         }
 
         return $this->render('create', [

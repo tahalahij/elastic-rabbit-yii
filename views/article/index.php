@@ -16,15 +16,18 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php  echo $this->render('_custom_search', ['model' => $custom_search]); ?>
 </div>
 
-<h1><?= Html::encode($this->title) ?></h1>
-<?php if (!Yii::$app->user->isGuest): ?>
+ <h1><?php /* Html::encode($this->title)*/ ?></h1> 
+<?php //if (!Yii::$app->user->isGuest): ?>
     <p>
-        <?= Html::a('Create Article', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Object', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-<?php endif; ?>
-    <?= \yii\widgets\ListView::widget([
-        'dataProvider' => $dataProvider,
-        'itemView' => '_article_item'
-    ]); ?>
+<?php //endif; ?>
+    <?php 
+    // \yii\widgets\ListView::widget([
+    //     'dataProvider' => $dataProvider,
+    //     'itemView' => '_article_item'
+    // ]); 
+    ?>
+
 </div>

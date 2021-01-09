@@ -28,7 +28,8 @@ class CustomSearch extends \yii\base\Model
         {
             array_push($ids, $hit['_id']);
         }
-        $query = Article::find()->where(array('in', 'id', $ids))->orderBy('created_at DESC');
+        
+        // $query = Article::find()->where(array('in', 'id', $ids))->orderBy('created_at DESC');
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

@@ -67,9 +67,9 @@ class Article extends ActiveRecord
     {
         return [
             'id' => 'ID',
-            'title' => 'Title',
+            'title' => 'Model',
             'slug' => 'Slug',
-            'body' => 'Body',
+            'body' => 'Object',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',
