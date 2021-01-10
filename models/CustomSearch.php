@@ -8,6 +8,7 @@ use app\models\Article;
 class CustomSearch extends \yii\base\Model
 {
     public $phrase;
+    public $index;
 
     public function rules()
     {
@@ -17,22 +18,12 @@ class CustomSearch extends \yii\base\Model
 
     }
     
-    public function search($phrase)
+    public function search($phrase, $index)
     {
         $search = new Search;
-        $result = $search->search($phrase);
+        $result = $search->search($phrase, $index);
         
         $data = json_decode($result);
-        $ids = array();
-        foreach ($data->hits->hits as $hit)
-        {
-            array_push($ids, $hit['_id']);
-        }
-        
-        // $query = Article::find()->where(array('in', 'id', $ids))->orderBy('created_at DESC');
-        $dataProvider = new ActiveDataProvider([
-            'query' => $query,
-        ]);
-        return  $dataProvider;
+        return  $data;
     }
 }

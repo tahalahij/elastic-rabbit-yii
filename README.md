@@ -14,11 +14,15 @@
     - open classes/Search.php and edit base_url and index (index will be dynamic later)
 
 ### Hot to use
-    Login with credentials 
-    got to posts (http://localhost:8080/posts/index)
-    create a new post or update an existing one
-    by checking your elastic server you can see that the title of the post is added as a doc
-
+    Run development server by going into project directory and $ php yii serve .
+    Then open the project main page "localhost:8080".
+    Create some new records in rabbitmq queue to be indexed in elasticsearch server by clicking 
+    "Create Object" and then filling the required fields(the model must be index name ex. user,post,product 
+    and must be the the data that you want to be in that index {'name' : 'taha', 'age': 30}).
+    By checking the queue server you must be able to see the data that is sent to 'azmon' queue.
+    This is where the node app does its job and indexes the data to elastic server.
+    now in search section you can specify a index and a search phrase.
+    If you dont fill in a queue it will search all indexes. then this will return the data that is sent back.
 
 ### How it works
 

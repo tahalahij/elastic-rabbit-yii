@@ -7,6 +7,7 @@ $form = ActiveForm::begin([
     'action' => ['search']
 ]) ?>
 
+    <?= $form->field($model, 'index') ?>
     <?= $form->field($model, 'phrase') ?>
     <div class="form-group">
             <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

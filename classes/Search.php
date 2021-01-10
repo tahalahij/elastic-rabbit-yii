@@ -8,10 +8,10 @@ use Yii;
 
 class Search {
     protected $base_url = "127.0.0.1:9200/thesis/_search";
-    protected $index = 'article';
+    protected $all_url = '127.0.0.1:9200/thesis/_search?pretty';
 
     public function indexer($attributes, $new_record, $object_entity)
-    {        
+    {   // new_record true = insert, false = update 
         return $new_record ? 
             $this->adaptor($attributes, 'insert',  $object_entity) : 
             $this->adaptor($attributes, 'update',  $object_entity);
@@ -43,24 +43,34 @@ class Search {
      * returned objects id are object_entity's record in our db
      * TODO : use a connector for elastic instead of http request 
      */
-    public function search($search_phrase)
+    public function search($search_phrase, $index = '')
     {
-        $input_data = array(
-            'query' => array(
-                "match_phrase" => array(
-                    $this->index => $search_phrase
-                ) 
-            )
-        );
+        if ($index != '' || $index != null){
+            $input_data = array(
+                'query' => array(
+                    "match_phrase" => array(
+                        $index => $search_phrase
+                    ) 
+                )
+            );
 
-        $handler = curl_init($this->base_url);
-        curl_setopt($handler, CURLOPT_HTTPHEADER, array(
-            'Content-Type: application/json',
-            'Connection: Keep-Alive'
-            ));
-        curl_setopt($handler, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($handler, CURLOPT_POSTFIELDS, json_encode($input_data));
-        curl_setopt($handler, CURLOPT_RETURNTRANSFER, true);
+            $handler = curl_init($this->base_url);
+            curl_setopt($handler, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Connection: Keep-Alive'
+                ));
+            curl_setopt($handler, CURLOPT_CUSTOMREQUEST, "POST");
+            curl_setopt($handler, CURLOPT_POSTFIELDS, json_encode($input_data));
+            curl_setopt($handler, CURLOPT_RETURNTRANSFER, true);
+        }else {
+            $handler = curl_init($this->all_url);
+            curl_setopt($handler, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'Connection: Keep-Alive'
+                ));
+            curl_setopt($handler, CURLOPT_CUSTOMREQUEST, "GET");
+            curl_setopt($handler, CURLOPT_RETURNTRANSFER, true);
+        }
         return curl_exec($handler);
     }
 }

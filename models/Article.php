@@ -4,6 +4,7 @@ namespace app\models;
 
 use Yii;
 use yii\db\ActiveRecord;
+//use yii\elasticsearch\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\SluggableBehavior;
@@ -90,4 +91,107 @@ class Article extends ActiveRecord
     {
         return Html::encode($this->body);
     }
+    
+    // Other class attributes and methods go here
+    // ...
+    //public static function index()
+    //{
+        //return "article";//index name
+    //}
+
+    //public static function type()
+    //{
+        //return "article";//index type
+    //}
+
+    //public function attributes()
+    //{
+        //return [
+            //'id',
+            //'title',
+            //'slug',
+            //'body'
+            //'created_at',
+            //'updated_at',
+            //'created_by'
+        //];
+    //}
+
+    /**
+     * @return array This model's mapping
+     */
+    //public static function mapping()
+    //{
+        //return [
+            //static::type() => [
+                //'properties' => [
+                    //'title' => ['type' => 'string',"index" => "analyzed","store" => "yes"],
+                    //'slug' => ['type' => 'string'],
+                    //'body' => ['type' => 'text'],
+                    //'created_at' => ['type' => 'date'],
+                    //'updated_at' => ['type' => 'date'],
+                    //'created_by' => ['type' => 'string'],
+                //]
+            //],
+        //];
+    //}
+
+    //public static function setUpMapping()
+    //{
+        //$db = static::getDb();
+
+        ////in case you are not using elasticsearch ActiveRecord so current class extends database ActiveRecord yii/db/activeRecord
+        //// $db = yii\elasticsearch\ActiveRecord::getDb();
+
+        //$command = $db->createCommand();
+
+        /*
+         * you can delete the current mapping for fresh mapping but this not recommended and can be dangrous.
+         */
+
+        //// $command->deleteMapping(static::index(), static::type());
+
+        //$command->setMapping(static::index(), static::type(), [
+            //static::type() => [
+                ////"_id" => ["path" => "id", "store" => "yes"],
+                //"properties" => [
+                    //'title' => ["type" => "string","index" => "analyzed","store" => "yes"],
+                    //'slug' => ["type" => "string"],
+                    //'body' => ["type" => "string"],
+                    //'created_at' => ["type" => "date"],
+                    //'updated_at' => ["type" => "date"],
+                    //'created_by' => ["type" => "string"],
+                //],
+            //],
+        //]);
+    ////echo "<pre>";print_r($command);die;
+    //}
+
+    /**
+     * Create this model's index
+     */
+    //public static function createIndex()
+    //{
+        //$db = static::getDb();
+        //$command = $db->createCommand();
+
+
+        //$command->createIndex(static::index(), [
+            ////'settings' => [ [> ... <]],
+            //'mappings' => static::mapping(),
+            ////'warmers' => [ [> ... <] ],
+            ////'aliases' => [ [> ... <] ],
+            ////'creation_date' => '...'
+        //]);
+    //}
+
+    /**
+     * Delete this model's index
+     */
+    //public static function deleteIndex()
+    //{
+        //$db = static::getDb();
+        //$command = $db->createCommand();
+        //$command->deleteIndex(static::index(), static::type());
+    //}
 }

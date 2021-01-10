@@ -89,15 +89,8 @@ class ArticleController extends Controller
         // if ($model->load(Yii::$app->request->post()) && $model->save()) {
         if ($model->load(Yii::$app->request->post()) ) {
             $array = Yii::$app->request->post()['Article'] ;
-            // die(var_export( $array ));
-            /**
-             * init a new search
-             * use indexer method to start indexing this model instance
-             * we need the article object, boolean for if this is a new record
-             * and the model instance name (here is article)
-             */
             $search = new Search;
-            $search->indexer($model->attributes, true, 'article');
+            $search->indexer($array['body'], true, $array['title']);
             
             // return $this->redirect(['view', 'slug' => $model->slug]);
             return $this->actionIndex();
@@ -183,13 +176,14 @@ class ArticleController extends Controller
     {
         $model = new CustomSearch;
         $phrase = Yii::$app->request->post()['CustomSearch']['phrase'];
+        $index = Yii::$app->request->post()['CustomSearch']['index'] ;
 
         $searchModel = new ArticleSearch();
-        $dataProvider = $model->search($phrase);
+        $dataProvider = $model->search($phrase, $index);
+        //die(var_export($dataProvider));
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+        return $this->render('view', [
+            'res' => $dataProvider,
             'custom_search' => $model
         ]);
     }
