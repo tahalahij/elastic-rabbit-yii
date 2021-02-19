@@ -33,7 +33,7 @@ class ArticleController extends Controller
                     [
                         'actions' => ['update', 'create', 'delete'],
                         'allow' => true,
-                        'roles' => []
+                        'roles' => ['@']
                     ]
                 ]
             ],
@@ -86,14 +86,17 @@ class ArticleController extends Controller
     {
         $model = new Article();
 
-        // if ($model->load(Yii::$app->request->post()) && $model->save()) {
-        if ($model->load(Yii::$app->request->post()) ) {
-            $array = Yii::$app->request->post()['Article'] ;
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            /**
+             * init a new search
+             * use indexer method to start indexing this model instance
+             * we need the article object, boolean for if this is a new record
+             * and the model instance name (here is article)
+             */
             $search = new Search;
-            $search->indexer($array['body'], true, $array['title']);
-            
-            // return $this->redirect(['view', 'slug' => $model->slug]);
-            return $this->actionIndex();
+            $search->indexer($model->attributes, 1, 'article');
+
+            return $this->redirect(['view', 'slug' => $model->slug]);
         }
 
         return $this->render('create', [
@@ -125,7 +128,7 @@ class ArticleController extends Controller
              * we need the article object, boolean for if this is a new record
              */
              $search = new Search;
-             $search->indexer($model->attributes, false, 'article');
+             $search->indexer($model->attributes, 0, 'article');
 
             return $this->redirect(['view', 'slug' => $model->slug]);
         }
@@ -147,11 +150,14 @@ class ArticleController extends Controller
         $model = $this->findModel($slug);
 
          //logic of protection for article owner
-         if($model->created_by !== Yii::$app->user->id)
-         {
-             throw new ForbiddenHttpException("Insuficient Privileges");
-         }
-         $model->delete();
+        if($model->created_by !== Yii::$app->user->id)
+        {
+            throw new ForbiddenHttpException("Insuficient Privileges");
+        }
+
+        $search = new Search;
+        $search->indexer($model->attributes, 2, 'article');
+        $model->delete();
 
         return $this->redirect(['index']);
     }
@@ -176,14 +182,13 @@ class ArticleController extends Controller
     {
         $model = new CustomSearch;
         $phrase = Yii::$app->request->post()['CustomSearch']['phrase'];
-        $index = Yii::$app->request->post()['CustomSearch']['index'] ;
 
         $searchModel = new ArticleSearch();
-        $dataProvider = $model->search($phrase, $index);
-        //die(var_export($dataProvider));
+        $dataProvider = $model->search($phrase);
 
-        return $this->render('view', [
-            'res' => $dataProvider,
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
             'custom_search' => $model
         ]);
     }
