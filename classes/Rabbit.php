@@ -20,7 +20,7 @@ class Rabbit {
         $this->connection = new AMQPStreamConnection($this->server, $this->port, $this->username, $this->password);
 
         $this->channel = $this->connection->channel();
-        $this->channel->queue_declare($this->queue, false, false, false, false);
+        $this->channel->queue_declare($this->queue, true, false, false, false);
     }
 
     public function send($msg)
