@@ -6,10 +6,17 @@ use app\classes\Rabbit;
 use app\models\User;
 use Yii;
 
-class Search {
-    protected $base_url = "127.0.0.1:9200/thesis/_search";
-    protected $index = 'article';
-
+class Search
+{
+    public $base_url ;
+    public $index ;
+    
+    public function __construct()
+    {
+        $env = require __DIR__ . '/../config/enviornment.php';
+        $this->base_url = $env['es_base_url'];
+        $this->index = $env['es_default_index'];
+    }
     public function indexer($attributes, $type, $object_entity)
     {
         switch ($type) {
