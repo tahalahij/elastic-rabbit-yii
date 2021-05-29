@@ -4,14 +4,13 @@
     - have php, composer installed (Or use xamp)
     - clone this repository
     - cd into cloned folder
-    - set your db credentials in config/db.php
+    - create a database name : 'testyii'
     - import testyii.sql to your SQL server (http://localhost/phpmyadmin/)
     - run $composer install
-    - check that "cookieValidationKey" is not empty  in config/web.php (IF YES set a random string)
+    - create .env file and copy the contents of .env.example in it
+    - fill the data needed in .env file
     - run $ php yii serve
     - open localhost:8080 (admin/admin)
-    - open classes/Rabbit.php and edit credentials
-    - open classes/Search.php and edit base_url and index (index will be dynamic later)
 
 ### Hot to use
     Login with credentials 

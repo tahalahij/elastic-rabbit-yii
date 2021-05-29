@@ -4,18 +4,25 @@ namespace app\classes;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
 
-class Rabbit {
-    protected $server = 'localhost';
-    protected $port = 5672;
-    protected $username  = 'guest';
-    protected $password  = 'guest';
+class Rabbit
+{
+    
+    public $server;
+    public $port;
+    public $username;
+    public $password ;
     protected $queue;
     protected $connection;
     protected $channel;
 
     public function __construct($queue = 'azmoon')
     {
-        $this->queue = $queue ;
+        $env = require __DIR__ . '/../config/enviornment.php';
+        $this->queue = $queue;
+        $this->server =  $env['rabbit_server_url'];
+        $this->port = $env['rabbit_server_port'];
+        $this->username = $env['rabbit_username'];
+        $this->password = $env['rabbit_password'];
 
         $this->connection = new AMQPStreamConnection($this->server, $this->port, $this->username, $this->password);
 
